@@ -1,0 +1,18 @@
+version: '3.7'
+
+# definindo containers 
+services:
+  db: # nome do container
+    image: postgres:latest
+    ports:
+      - '5433:5432' # maquina:container
+    restart: always
+    environment: 
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=next-shop
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # persistir dados, pasta padrao
+
+volumes:
+  postgres_data: 
