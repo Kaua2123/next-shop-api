@@ -12,6 +12,21 @@ enum Role {
   ADMIN
 }
 
+enum Sizes {
+  P
+  M
+  G
+  GG
+}
+
+enum Category {
+  ELETRONICOS
+  ESTILO
+  LIVROS
+  FERRAMENTAS
+  JOGOS
+}
+
 model User {
   id       Int    @id @default(autoincrement()) // autoincrement. 1, 2, 3...
   name     String
@@ -20,4 +35,18 @@ model User {
   role     Role   @default(CLIENT)
 
   @@map("users")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  price       Float
+  stock       Int
+  image_url   String
+  sizes       Sizes
+  category    Category
+  created_at  DateTime @default(now())
+
+  @@map("products")
 }
