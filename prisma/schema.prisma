@@ -53,7 +53,7 @@ model User {
 }
 
 model Product {
-  id          String     @id @default(uuid())
+  id          String       @id @default(uuid())
   name        String
   description String
   price       Float
@@ -61,17 +61,20 @@ model Product {
   image_url   String
   sizes       Sizes
   category    Category
-  created_at  DateTime   @default(now())
+  created_at  DateTime     @default(now())
   promotion   Promotion?
+  cart_items  CartItems[]
+  order_items OrderItems[]
 
   @@map("products")
 }
 
 model Cart {
-  id         String   @id @default(uuid())
-  created_at DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id])
-  userId     Int      @unique
+  id         String      @id @default(uuid())
+  created_at DateTime    @default(now())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     Int         @unique
+  cart_items CartItems[]
 
   @@map("carts")
 }
@@ -84,6 +87,7 @@ model Order {
   created_at     DateTime      @default(now())
   user           User          @relation(fields: [userId], references: [id])
   userId         Int           @unique
+  order_items    OrderItems[]
 
   @@map("orders")
 }
@@ -97,4 +101,25 @@ model Promotion {
   productId  String   @unique
 
   @@map("promotions")
+}
+
+model CartItems {
+  id         String   @id @default(uuid())
+  cart       Cart     @relation(fields: [cartId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
+  cartId     String   @unique
+  productId  String   @unique
+  quantity   Int
+  created_at DateTime @default(now())
+}
+
+model OrderItems {
+  id         String   @id @default(uuid())
+  quantity   Int
+  price      Float
+  order      Order    @relation(fields: [orderId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
+  orderId    String   @unique
+  productId  String   @unique
+  created_at DateTime @default(now())
 }
