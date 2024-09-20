@@ -111,6 +111,8 @@ model CartItems {
   productId  String   @unique
   quantity   Int
   created_at DateTime @default(now())
+
+  @@map("cart_items")
 }
 
 model OrderItems {
@@ -122,4 +124,6 @@ model OrderItems {
   orderId    String   @unique
   productId  String   @unique
   created_at DateTime @default(now())
+
+  @@map("order_items")
 }
