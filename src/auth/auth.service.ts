@@ -1,10 +1,11 @@
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
 import { EmailOrPasswordDoNotMatch } from './errors/email-or-password-do-not-match';
 import { UserNotFound } from 'src/user/errors/user-not-found';
+
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {

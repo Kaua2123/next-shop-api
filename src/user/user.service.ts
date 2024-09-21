@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
-import * as bcrypt from 'bcrypt';
 import { UserNotFound } from './errors/user-not-found';
+
+import * as bcrypt from 'bcrypt';
 
 @Injectable() // para injeção de dependencia.
 export class UserService {
@@ -10,7 +11,6 @@ export class UserService {
 
   async users() {
     const users = await this.prisma.user.findMany();
-
     if (!users) throw new UserNotFound();
 
     return users;
