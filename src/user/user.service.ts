@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { UserNotFound } from './errors/user-not-found';
 
 @Injectable() // para injeção de dependencia.
 export class UserService {
@@ -9,6 +10,8 @@ export class UserService {
 
   async users() {
     const users = await this.prisma.user.findMany();
+
+    if (!users) throw new UserNotFound();
 
     return users;
   }
@@ -20,6 +23,8 @@ export class UserService {
     const user = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
     });
+
+    if (!user) throw new UserNotFound();
 
     return user;
   }
@@ -43,6 +48,8 @@ export class UserService {
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
     data: Prisma.UserUpdateInput,
   ) {
+    if (!userWhereUniqueInput) throw new UserNotFound();
+
     return await this.prisma.user.update({
       data,
       where: userWhereUniqueInput,
@@ -50,6 +57,8 @@ export class UserService {
   }
 
   async deleteUser(userWhereUniqueInput: Prisma.UserWhereUniqueInput) {
+    if (!userWhereUniqueInput) throw new UserNotFound();
+
     await this.prisma.user.delete({
       where: userWhereUniqueInput,
     });

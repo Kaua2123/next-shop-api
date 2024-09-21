@@ -3,6 +3,8 @@ import { PrismaService } from 'src/database/prisma.service';
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { EmailOrPasswordDoNotMatch } from './errors/email-or-password-do-not-match';
+import { UserNotFound } from 'src/user/errors/user-not-found';
 
 @Injectable()
 export class AuthService {
@@ -15,20 +17,14 @@ export class AuthService {
       },
     });
 
-    if (!user)
-      return {
-        message: 'Usuário não encontrado.',
-      };
+    if (!user) throw new UserNotFound();
 
-    const pass = bcrypt.compare(
-      String(userWhereUniqueInput.password),
+    const pass = await bcrypt.compare(
+      userWhereUniqueInput.password.toString(),
       user.password,
     );
 
-    if (!pass)
-      return {
-        message: 'Email ou senha incorretas.',
-      };
+    if (!pass) throw new EmailOrPasswordDoNotMatch();
 
     const { id } = user;
 
