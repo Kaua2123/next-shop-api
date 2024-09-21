@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable() // para injeção de dependencia.
 export class UserService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async users() {
-    const users = await this.prismaService.user.findMany();
+    const users = await this.prisma.user.findMany();
 
     return users;
   }
@@ -16,7 +17,7 @@ export class UserService {
   // Essa, por exemplo, permite que um usuario especifico seja encontrado
   // com base em seus campos unicos definidos no model. (como id e email)
   async user(userWhereUniqueInput: Prisma.UserWhereUniqueInput) {
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prisma.user.findUnique({
       where: userWhereUniqueInput,
     });
 
@@ -27,8 +28,11 @@ export class UserService {
   // Semelhante á uma DTO, que seria os campos definidos, cada um com validação.
   // Prisma gera automaticamente essa tipagem com base nos models.
   async createUser(data: Prisma.UserCreateInput) {
-    return await this.prismaService.user.create({
-      data,
+    const { name, email, password, cart, order, role } = data;
+    const hashPassword = await bcrypt.hash(password, 8);
+
+    return await this.prisma.user.create({
+      data: { name, email, password: hashPassword, cart, order, role },
     });
   }
 
@@ -39,14 +43,14 @@ export class UserService {
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
     data: Prisma.UserUpdateInput,
   ) {
-    return await this.prismaService.user.update({
+    return await this.prisma.user.update({
       data,
       where: userWhereUniqueInput,
     });
   }
 
   async deleteUser(userWhereUniqueInput: Prisma.UserWhereUniqueInput) {
-    await this.prismaService.user.delete({
+    await this.prisma.user.delete({
       where: userWhereUniqueInput,
     });
 
