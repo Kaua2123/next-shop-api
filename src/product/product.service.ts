@@ -20,10 +20,37 @@ export class ProductService {
     return product;
   }
 
-  // ação do(s) adm do ecommerce
-  async createProduct() {}
-  // ação do(s) adm do ecommerce
-  async updateProduct() {}
-  // ação do(s) adm do ecommerce
-  async deleteProduct() {}
+  // ação do(s) adm(s) do ecommerce
+  async createProduct(data: Prisma.ProductCreateInput) {
+    return await this.prisma.product.create({
+      data,
+    });
+  }
+  // ação do(s) adm(s) do ecommerce
+  async updateProduct(
+    productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
+    data: Prisma.ProductUpdateInput,
+  ) {
+    const product = await this.prisma.product.update({
+      where: productWhereUniqueInput,
+      data,
+    });
+
+    return product;
+  }
+  // ação do(s) adm(s) do ecommerce
+  async disponibility(
+    productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
+    data: Prisma.ProductUpdateInput,
+  ) {
+    const product = await this.prisma.product.update({
+      where: productWhereUniqueInput,
+      data,
+    });
+
+    return {
+      productId: product.id,
+      isDisponible: product.isDisponible,
+    };
+  }
 }

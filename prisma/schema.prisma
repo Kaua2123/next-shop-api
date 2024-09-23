@@ -53,18 +53,19 @@ model User {
 }
 
 model Product {
-  id          String       @id @default(uuid())
-  name        String
-  description String
-  price       Float
-  stock       Int
-  image_url   String
-  sizes       Sizes
-  category    Category
-  created_at  DateTime     @default(now())
-  promotion   Promotion?
-  cart_items  CartItems[]
-  order_items OrderItems[]
+  id           String       @id @default(uuid())
+  name         String
+  description  String
+  price        Float
+  stock        Int
+  image_url    String
+  sizes        Sizes?
+  category     Category
+  isDisponible Boolean      @default(true)
+  created_at   DateTime     @default(now())
+  promotion    Promotion?
+  cart_items   CartItems[]
+  order_items  OrderItems[]
 
   @@map("products")
 }
