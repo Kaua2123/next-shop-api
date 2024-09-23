@@ -59,4 +59,15 @@ export class ProductController {
   ) {
     return this.productService.updateProductDisponibility({ id }, productData);
   }
+
+  @Patch('/updateProductCategory/:id')
+  async updateProductCategory(
+    @Param('id') id: string,
+    @Body()
+    productData: {
+      category: Category;
+    },
+  ) {
+    return this.productService.updateProductCategory({ id }, productData);
+  }
 }

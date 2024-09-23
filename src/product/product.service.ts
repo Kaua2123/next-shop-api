@@ -53,4 +53,19 @@ export class ProductService {
       isDisponible: product.isDisponible,
     };
   }
+
+  async updateProductCategory(
+    productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
+    data: Prisma.ProductUpdateInput,
+  ) {
+    const product = await this.prisma.product.update({
+      where: productWhereUniqueInput,
+      data,
+    });
+
+    return {
+      productId: product.id,
+      category: product.category,
+    };
+  }
 }
