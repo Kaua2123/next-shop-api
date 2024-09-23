@@ -49,14 +49,14 @@ export class ProductController {
     return this.productService.updateProduct({ id }, productData);
   }
 
-  @Patch('/toggleDisponibility/:id')
-  async toggleDisponibility(
+  @Patch('/updateProductDisponibility/:id')
+  async updateProductDisponibility(
     @Param('id') id: string,
     @Body()
     productData: {
       isDisponible: boolean;
     },
   ) {
-    return this.productService.disponibility({ id }, productData);
+    return this.productService.updateProductDisponibility({ id }, productData);
   }
 }

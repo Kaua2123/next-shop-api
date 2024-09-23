@@ -39,7 +39,7 @@ export class ProductService {
     return product;
   }
   // ação do(s) adm(s) do ecommerce
-  async disponibility(
+  async updateProductDisponibility(
     productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
     data: Prisma.ProductUpdateInput,
   ) {
