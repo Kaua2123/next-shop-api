@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
+import { ProductNotFound } from './errors/product-not-found';
+import { MissingId } from 'src/errors/missing-id';
 
 @Injectable()
 export class ProductService {
@@ -9,6 +11,8 @@ export class ProductService {
   async products() {
     const products = await this.prisma.product.findMany();
 
+    if (!products) throw new ProductNotFound();
+
     return products;
   }
 
@@ -16,6 +20,8 @@ export class ProductService {
     const product = await this.prisma.product.findFirst({
       where: productWhereUniqueInput,
     });
+
+    if (!product) throw new ProductNotFound();
 
     return product;
   }
@@ -31,10 +37,14 @@ export class ProductService {
     productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
     data: Prisma.ProductUpdateInput,
   ) {
+    if (!productWhereUniqueInput) throw new MissingId();
+
     const product = await this.prisma.product.update({
       where: productWhereUniqueInput,
       data,
     });
+
+    if (!product) throw new ProductNotFound();
 
     return product;
   }
@@ -43,10 +53,14 @@ export class ProductService {
     productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
     data: Prisma.ProductUpdateInput,
   ) {
+    if (!productWhereUniqueInput) throw new MissingId();
+
     const product = await this.prisma.product.update({
       where: productWhereUniqueInput,
       data,
     });
+
+    if (!product) throw new ProductNotFound();
 
     return {
       productId: product.id,
@@ -58,10 +72,14 @@ export class ProductService {
     productWhereUniqueInput: Prisma.ProductWhereUniqueInput,
     data: Prisma.ProductUpdateInput,
   ) {
+    if (!productWhereUniqueInput) throw new MissingId();
+
     const product = await this.prisma.product.update({
       where: productWhereUniqueInput,
       data,
     });
+
+    if (!product) throw new ProductNotFound();
 
     return {
       productId: product.id,

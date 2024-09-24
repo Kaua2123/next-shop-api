@@ -4,6 +4,7 @@ import { PrismaService } from 'src/database/prisma.service';
 import { UserNotFound } from './errors/user-not-found';
 
 import * as bcrypt from 'bcrypt';
+import { MissingId } from 'src/errors/missing-id';
 
 @Injectable() // para injeção de dependencia.
 export class UserService {
@@ -48,7 +49,7 @@ export class UserService {
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
     data: Prisma.UserUpdateInput,
   ) {
-    if (!userWhereUniqueInput) throw new UserNotFound();
+    if (!userWhereUniqueInput) throw new MissingId();
 
     return await this.prisma.user.update({
       data,
@@ -57,7 +58,7 @@ export class UserService {
   }
 
   async deleteUser(userWhereUniqueInput: Prisma.UserWhereUniqueInput) {
-    if (!userWhereUniqueInput) throw new UserNotFound();
+    if (!userWhereUniqueInput) throw new MissingId();
 
     await this.prisma.user.delete({
       where: userWhereUniqueInput,
