@@ -84,7 +84,7 @@ model Order {
   id             String        @id @default(uuid())
   status         Status
   total_price    Float
-  payment_status PaymentStatus
+  payment_status PaymentStatus @default(PENDENTE)
   created_at     DateTime      @default(now())
   user           User          @relation(fields: [userId], references: [id])
   userId         Int           @unique
