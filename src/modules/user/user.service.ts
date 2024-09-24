@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { PrismaService } from 'src/database/prisma.service';
 import { UserNotFound } from './errors/user-not-found';
+import { PrismaService } from 'src/database/prisma.service';
 
 import * as bcrypt from 'bcrypt';
 import { MissingId } from 'src/errors/missing-id';
@@ -42,7 +42,7 @@ export class UserService {
     });
   }
 
-  // aqui há uma combinaçao das duas tipagens do prisma.
+  //  aqui há uma combinaçao das duas tipagens do prisma.
   //  userUpdateInput pra definir todos os dados que podem ser atualizados;
   //  userWhereUniqueInput para, novamente, identificar um registro unico de usuario.
   async updateUser(
