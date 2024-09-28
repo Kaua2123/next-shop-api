@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
+import { CreateOrderDto } from './dto/create-order-dto';
 
 @Injectable()
 export class OrderService {
@@ -20,6 +21,38 @@ export class OrderService {
     return order;
   }
 
-  async createOrder() {}
+  async createOrder(createOrderDto: CreateOrderDto) {
+    const { userId, items } = createOrderDto;
+    // id tem q ser number
+    // quantity tmb
+
+    const order = await this.prisma.order.create({
+      data: {
+        total_price: items.reduce(
+          (acc, item) => acc + item.price * item.quantity,
+          0,
+        ),
+        user: {
+          connect: { id: userId },
+        },
+        order_items: {
+          create: items.map((item) => ({
+            quantity: item.quantity,
+            price: item.price,
+            product: {
+              connect: { id: item.productId },
+            },
+          })),
+        },
+      },
+    });
+
+    return {
+      order,
+    };
+  }
+
+  // orecisarei de integração com a API do mercado pago para realizar pagamentos
+  async payOrder() {}
   async cancelOrder() {}
 }
