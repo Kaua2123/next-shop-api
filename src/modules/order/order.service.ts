@@ -25,6 +25,9 @@ export class OrderService {
     const { userId, items } = createOrderDto;
     // id tem q ser number
     // quantity tmb
+    // items estão aqui no dto, por enquanto
+    // são passados via POST.
+    // porém, devem vir do carrinho de compras
 
     const order = await this.prisma.order.create({
       data: {
@@ -52,7 +55,8 @@ export class OrderService {
     };
   }
 
-  // orecisarei de integração com a API do mercado pago para realizar pagamentos
-  async payOrder() {}
+  // usando a api do ASAAS (integraçao com pagamentos)
+  async checkout() {}
+
   async cancelOrder() {}
 }
