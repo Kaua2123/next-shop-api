@@ -56,7 +56,13 @@ export class OrderService {
   }
 
   // usando a api do ASAAS (integraçao com pagamentos)
-  async checkout() {}
+  async checkout(orderWhereUniqueInput: Prisma.OrderWhereUniqueInput) {
+    const order = await this.prisma.order.findFirst({
+      where: orderWhereUniqueInput,
+    });
+
+    console.log(order);
+  }
 
   async cancelOrder() {}
 }

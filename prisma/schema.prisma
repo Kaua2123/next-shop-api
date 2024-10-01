@@ -46,9 +46,10 @@ model User {
   email         String  @unique
   password      String
   cpfCnpj       String? // cpf ou cnpj
-  postalCode    String?
   address       String?
   addressNumber String?
+  province      String?
+  postalCode    String?
   role          Role    @default(CLIENT)
   cart          Cart?
   order         Order[]
