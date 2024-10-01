@@ -3,7 +3,7 @@ import { AuthModule } from './auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { ProductModule } from './modules/product/product.module';
 import { OrderModule } from './modules/order/order.module';
-import { AsaasModule } from './modules/asaas/asaas.module';
+import { AsaasModule } from './modules/asaas-api/asaas.module';
 
 @Module({
   imports: [UserModule, AuthModule, ProductModule, OrderModule, AsaasModule],
