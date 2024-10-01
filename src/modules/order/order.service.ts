@@ -61,7 +61,7 @@ export class OrderService {
       where: orderWhereUniqueInput,
     });
 
-    console.log(order);
+    return order;
   }
 
   async cancelOrder() {}

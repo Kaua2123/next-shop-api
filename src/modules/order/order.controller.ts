@@ -21,8 +21,8 @@ export class OrderController {
     return await this.orderService.createOrder(createOrderDto);
   }
 
-  @Post('/checkout')
-  async checkout(@Body() createOrderDto: CreateOrderDto) {
-    return await this.orderService.createOrder(createOrderDto);
+  @Post('/checkout/:id')
+  async checkout(@Param('id') id: string) {
+    return await this.orderService.checkout({ id });
   }
 }
