@@ -2,10 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from 'src/database/prisma.service';
 import { CreateOrderDto } from './dto/create-order-dto';
+import { CustomerService } from '../asaas-api/customers/customer.service';
+import { PaymentService } from '../asaas-api/payment/payment.service';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly customerService: CustomerService,
+    private readonly paymentService: PaymentService,
+  ) {}
 
   async orders() {
     const orders = await this.prisma.order.findMany();

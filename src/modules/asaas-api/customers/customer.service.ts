@@ -15,7 +15,15 @@ export class CustomerService {
     },
   };
 
-  async clients() {
+  async customer(id: string) {
+    const response = await lastValueFrom(
+      this.httpService.get(`${this.url}/${id}`, this.config),
+    );
+
+    return response.data;
+  }
+
+  async customers() {
     // nest js retorna um observable ao manipular o httpService (que usa o axios)
     // por isso devemos torná-lo uma promise, com o lastValueFrom.
     const response = await lastValueFrom(

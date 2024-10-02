@@ -2,10 +2,14 @@ import { Module } from '@nestjs/common';
 import { OrderController } from './order.controller';
 import { PrismaService } from 'src/database/prisma.service';
 import { OrderService } from './order.service';
+import { AsaasModule } from '../asaas-api/asaas.module';
+import { HttpModule } from '@nestjs/axios';
+import { CustomerService } from '../asaas-api/customers/customer.service';
+import { PaymentService } from '../asaas-api/payment/payment.service';
 
 @Module({
-  imports: [],
+  imports: [AsaasModule, HttpModule],
   controllers: [OrderController],
-  providers: [PrismaService, OrderService],
+  providers: [PrismaService, CustomerService, PaymentService, OrderService],
 })
 export class OrderModule {}
