@@ -4,6 +4,7 @@ import { PrismaService } from 'src/database/prisma.service';
 import { CreateOrderDto } from './dto/create-order-dto';
 import { CustomerService } from '../asaas-api/customers/customer.service';
 import { PaymentService } from '../asaas-api/payment/payment.service';
+import { CreateCustomerDto } from '../asaas-api/customers/dto/create-customer-dto';
 
 @Injectable()
 export class OrderService {
@@ -62,7 +63,11 @@ export class OrderService {
   }
 
   // usando a api do ASAAS (integraçao com pagamentos)
-  async checkout(orderWhereUniqueInput: Prisma.OrderWhereUniqueInput) {
+  async checkout(
+    orderWhereUniqueInput: Prisma.OrderWhereUniqueInput,
+    customerId: string,
+    createCustomerDto?: CreateCustomerDto,
+  ) {
     const order = await this.prisma.order.findFirst({
       where: orderWhereUniqueInput,
     });
