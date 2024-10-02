@@ -13,7 +13,7 @@ export class CustomerController {
   }
 
   @Get('/get/customers')
-  async getCustomers(): Promise<ICustomer[] | { message: string }> {
+  async getCustomers(): Promise<ICustomer[]> {
     return await this.customerService.customers();
   }
 
