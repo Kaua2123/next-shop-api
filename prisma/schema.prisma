@@ -45,7 +45,7 @@ model User {
   name          String
   email         String  @unique
   password      String
-  cpfCnpj       String? // cpf ou cnpj
+  cpfCnpj       String  @unique // cpf ou cnpj
   address       String?
   addressNumber String?
   province      String?
