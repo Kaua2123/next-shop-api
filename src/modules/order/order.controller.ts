@@ -2,7 +2,6 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order-dto';
 import { CreatePaymentDto } from '../asaas-api/payment/dto/create-payment-dto';
-import { CreateCustomerDto } from '../asaas-api/customers/dto/create-customer-dto';
 
 @Controller('/order')
 export class OrderController {
@@ -23,18 +22,16 @@ export class OrderController {
     return await this.orderService.createOrder(createOrderDto);
   }
 
-  @Post('/checkout/:id/:customerId')
+  @Post('/checkout/:id/:customerId?') // interrogaçao pra indicar q o parametro é opcional.
   async checkout(
     @Param('id') id: string,
-    @Param('customerId') customerId: string,
     @Body() createPaymentDTO: CreatePaymentDto,
-    @Body() createCustomerDto?: CreateCustomerDto,
+    @Param('customerId') customerId?: string,
   ) {
     return await this.orderService.checkout(
       { id },
-      customerId,
       createPaymentDTO,
-      createCustomerDto,
+      customerId,
     );
   }
 }

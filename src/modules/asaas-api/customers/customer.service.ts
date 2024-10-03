@@ -44,6 +44,8 @@ export class CustomerService {
   async createCustomer(
     createCustomerDto: CreateCustomerDto,
   ): Promise<ICustomer> {
+    console.log(createCustomerDto);
+
     const response = await lastValueFrom(
       this.httpService.post(this.url, createCustomerDto, this.config),
     );

@@ -4,7 +4,6 @@ import { PrismaService } from 'src/database/prisma.service';
 import { CreateOrderDto } from './dto/create-order-dto';
 import { CustomerService } from '../asaas-api/customers/customer.service';
 import { PaymentService } from '../asaas-api/payment/payment.service';
-import { CreateCustomerDto } from '../asaas-api/customers/dto/create-customer-dto';
 import { CreatePaymentDto } from '../asaas-api/payment/dto/create-payment-dto';
 
 @Injectable()
@@ -66,23 +65,35 @@ export class OrderService {
   // usando a api do ASAAS (integraçao com pagamentos)
   async checkout(
     orderWhereUniqueInput: Prisma.OrderWhereUniqueInput,
-    customerId: string,
     createPaymentDto: CreatePaymentDto,
-    createCustomerDto?: CreateCustomerDto,
+    customerId?: string,
   ) {
     const order = await this.prisma.order.findFirst({
       where: orderWhereUniqueInput,
+      include: {
+        user: true,
+      },
     });
 
-    if (!customerId) return { message: 'missing customerId' };
-    const customerExists = await this.customerService.customer(customerId);
+    const customerExists =
+      customerId && (await this.customerService.customer(customerId));
 
-    const newCustomer = !!customerExists
-      ? customerExists
-      : await this.customerService.createCustomer(createCustomerDto);
+    const { user } = order;
+
+    const customer =
+      customerExists && customerId != null // se foi passado um id e o cliente existe
+        ? customerExists
+        : await this.customerService.createCustomer({
+            // se não foi passado nenhum id, provavelmente o cliente nao existe.
+            // porém, há casos em que o id simplesmente não foi recebido por algum motivo.
+            // por isso, a condição verifica se existe, primeiro, um cliente.
+            // depois verifica se o id foi fornecido TAMBÉM.
+            name: user.name,
+            cpfCnpj: user.cpfCnpj,
+          });
 
     const payment = await this.paymentService.createPayment({
-      customer: newCustomer.id,
+      customer: customer.id,
       value: order.total_price,
       ...createPaymentDto,
     });
