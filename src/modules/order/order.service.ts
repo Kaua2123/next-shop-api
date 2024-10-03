@@ -5,6 +5,7 @@ import { CreateOrderDto } from './dto/create-order-dto';
 import { CustomerService } from '../asaas-api/customers/customer.service';
 import { PaymentService } from '../asaas-api/payment/payment.service';
 import { CreateCustomerDto } from '../asaas-api/customers/dto/create-customer-dto';
+import { CreatePaymentDto } from '../asaas-api/payment/dto/create-payment-dto';
 
 @Injectable()
 export class OrderService {
@@ -66,13 +67,30 @@ export class OrderService {
   async checkout(
     orderWhereUniqueInput: Prisma.OrderWhereUniqueInput,
     customerId: string,
+    createPaymentDto: CreatePaymentDto,
     createCustomerDto?: CreateCustomerDto,
   ) {
     const order = await this.prisma.order.findFirst({
       where: orderWhereUniqueInput,
     });
 
-    return order;
+    if (!customerId) return { message: 'missing customerId' };
+    const customerExists = await this.customerService.customer(customerId);
+
+    const newCustomer = !!customerExists
+      ? customerExists
+      : await this.customerService.createCustomer(createCustomerDto);
+
+    const payment = await this.paymentService.createPayment({
+      customer: newCustomer.id,
+      value: order.total_price,
+      ...createPaymentDto,
+    });
+
+    return {
+      order,
+      payment,
+    };
   }
 
   async cancelOrder() {}

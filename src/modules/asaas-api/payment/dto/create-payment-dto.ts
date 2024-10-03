@@ -4,6 +4,6 @@ export class CreatePaymentDto {
   customer: string; // id do customer
   billingType: BillingType;
   value: number;
-  dueDate: Date;
+  dueDate: string;
   description?: string;
 }
