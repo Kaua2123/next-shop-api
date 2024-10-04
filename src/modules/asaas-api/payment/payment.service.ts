@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { lastValueFrom } from 'rxjs';
 import { CreatePaymentDto } from './dto/create-payment-dto';
+import { PaymentNotFound } from './error/payment-not-found';
 
 @Injectable()
 export class PaymentService {
@@ -19,6 +20,8 @@ export class PaymentService {
     const response = await lastValueFrom(
       this.httpService.get(this.url, this.config),
     );
+
+    if (!response.data) throw new PaymentNotFound();
 
     return response.data;
   }
