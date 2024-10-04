@@ -34,11 +34,11 @@ export class UserService {
   // Semelhante á uma DTO, que seria os campos definidos, cada um com validação.
   // Prisma gera automaticamente essa tipagem com base nos models.
   async createUser(data: Prisma.UserCreateInput) {
-    const { name, email, password, cart, order, role } = data;
+    const { name, email, password, cpfCnpj, cart, order, role } = data;
     const hashPassword = await bcrypt.hash(password, 8);
 
     return await this.prisma.user.create({
-      data: { name, email, password: hashPassword, cart, order, role },
+      data: { name, email, password: hashPassword, cpfCnpj, cart, order, role },
     });
   }
 

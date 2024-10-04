@@ -31,6 +31,7 @@ export class UserController {
       name: string;
       email: string;
       password: string;
+      cpfCnpj: string;
       role?: 'CLIENT' | 'ADMIN';
     },
   ) {

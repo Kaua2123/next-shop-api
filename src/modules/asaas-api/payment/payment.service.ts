@@ -16,6 +16,16 @@ export class PaymentService {
     },
   };
 
+  async payment(id: string) {
+    const response = await lastValueFrom(
+      this.httpService.get(this.url + '/' + id, this.config),
+    );
+
+    if (!response.data) throw new PaymentNotFound();
+
+    return response.data;
+  }
+
   async payments() {
     const response = await lastValueFrom(
       this.httpService.get(this.url, this.config),
