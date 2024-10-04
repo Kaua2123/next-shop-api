@@ -5,6 +5,7 @@ import { CreateOrderDto } from './dto/create-order-dto';
 import { CustomerService } from '../asaas-api/customers/customer.service';
 import { PaymentService } from '../asaas-api/payment/payment.service';
 import { CreatePaymentDto } from '../asaas-api/payment/dto/create-payment-dto';
+import { OrderNotFound } from './errors/order-not-found';
 
 @Injectable()
 export class OrderService {
@@ -17,6 +18,8 @@ export class OrderService {
   async orders() {
     const orders = await this.prisma.order.findMany();
 
+    if (!orders) throw new OrderNotFound();
+
     return orders;
   }
 
@@ -24,6 +27,8 @@ export class OrderService {
     const order = await this.prisma.order.findFirst({
       where: orderWhereUniqueInput,
     });
+
+    if (!order) throw new OrderNotFound();
 
     return order;
   }
@@ -74,6 +79,8 @@ export class OrderService {
         user: true,
       },
     });
+
+    if (!order) throw new OrderNotFound();
 
     const customerExists =
       customerId && (await this.customerService.customer(customerId));
