@@ -1,8 +1,9 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { lastValueFrom } from 'rxjs';
+import { catchError, lastValueFrom } from 'rxjs';
 import { CreatePaymentDto } from './dto/create-payment-dto';
 import { PaymentNotFound } from './error/payment-not-found';
+import { AxiosError } from 'axios';
 
 @Injectable()
 export class PaymentService {
@@ -18,7 +19,11 @@ export class PaymentService {
 
   async payment(id: string) {
     const response = await lastValueFrom(
-      this.httpService.get(this.url + '/' + id, this.config),
+      this.httpService.get(this.url + '/' + id, this.config).pipe(
+        catchError((error: AxiosError) => {
+          throw error.response.data;
+        }),
+      ),
     );
 
     if (!response.data) throw new PaymentNotFound();
@@ -28,7 +33,11 @@ export class PaymentService {
 
   async payments() {
     const response = await lastValueFrom(
-      this.httpService.get(this.url, this.config),
+      this.httpService.get(this.url, this.config).pipe(
+        catchError((error: AxiosError) => {
+          throw error.response.data;
+        }),
+      ),
     );
 
     if (!response.data) throw new PaymentNotFound();
@@ -38,7 +47,11 @@ export class PaymentService {
 
   async createPayment(createPaymentDto: CreatePaymentDto) {
     const response = await lastValueFrom(
-      this.httpService.post(this.url, createPaymentDto, this.config),
+      this.httpService.post(this.url, createPaymentDto, this.config).pipe(
+        catchError((error: AxiosError) => {
+          throw error.response.data;
+        }),
+      ),
     );
 
     return response.data;

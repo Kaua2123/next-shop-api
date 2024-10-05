@@ -1,7 +1,8 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { lastValueFrom } from 'rxjs';
+import { catchError, lastValueFrom } from 'rxjs';
 import { PayQrCodeDto } from './dto/pay-qr-code-dto';
+import { AxiosError } from 'axios';
 
 @Injectable()
 export class PixService {
@@ -20,7 +21,11 @@ export class PixService {
     const url = this.url + '/' + paymentId + '/pixQrCode';
 
     const response = await lastValueFrom(
-      this.httpService.get(url, this.config),
+      this.httpService.get(url, this.config).pipe(
+        catchError((error: AxiosError) => {
+          throw error.response.data;
+        }),
+      ),
     );
 
     return response.data;
@@ -34,7 +39,11 @@ export class PixService {
     console.log(payQrCodeDto);
 
     const response = await lastValueFrom(
-      this.httpService.post(url, payQrCodeDto, this.config),
+      this.httpService.post(url, payQrCodeDto, this.config).pipe(
+        catchError((error: AxiosError) => {
+          throw error.response.data;
+        }),
+      ),
     );
 
     return response.data;

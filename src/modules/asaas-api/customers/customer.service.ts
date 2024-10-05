@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { lastValueFrom } from 'rxjs';
+import { catchError, lastValueFrom } from 'rxjs';
 import { CreateCustomerDto } from './dto/create-customer-dto';
 import { ICustomer } from 'src/definitions';
 import { CustomerNotFound } from './errors/customer-not-found';
+import { AxiosError } from 'axios';
 
 @Injectable()
 export class CustomerService {
@@ -19,7 +20,11 @@ export class CustomerService {
 
   async customer(id: string): Promise<ICustomer> {
     const response = await lastValueFrom(
-      this.httpService.get(this.url + '/' + id, this.config),
+      this.httpService.get(this.url + '/' + id, this.config).pipe(
+        catchError((error: AxiosError) => {
+          throw error.response.data;
+        }),
+      ),
     );
 
     // trocar por um error dps
@@ -32,7 +37,11 @@ export class CustomerService {
     // nest js retorna um observable ao manipular o httpService (que usa o axios)
     // por isso devemos torná-lo uma promise, com o lastValueFrom.
     const response = await lastValueFrom(
-      this.httpService.get(this.url, this.config),
+      this.httpService.get(this.url, this.config).pipe(
+        catchError((error: AxiosError) => {
+          throw error.response.data;
+        }),
+      ),
     );
 
     // trocar por um error dps
@@ -47,7 +56,11 @@ export class CustomerService {
     console.log(createCustomerDto);
 
     const response = await lastValueFrom(
-      this.httpService.post(this.url, createCustomerDto, this.config),
+      this.httpService.post(this.url, createCustomerDto, this.config).pipe(
+        catchError((error: AxiosError) => {
+          throw error.response.data;
+        }),
+      ),
     );
 
     return response.data;
