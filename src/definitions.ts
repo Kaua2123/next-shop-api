@@ -1,3 +1,20 @@
+export type BillingType = 'PIX' | 'CREDIT_CARD' | 'BOLETO';
+export type Status =
+  | 'PENDING'
+  | 'RECEIVED'
+  | 'CONFIRMED'
+  | 'OVERDUE'
+  | 'REFUNDED'
+  | 'RECEIVED_IN_CASH'
+  | 'REFUND_REQUESTED'
+  | 'REFUND_IN_PROGRESS'
+  | 'CHARGEBACK_REQUESTED'
+  | 'CHARGEBACK_DISPUTE'
+  | 'AWAITING_CHARGEBACK_REVERSAL'
+  | 'DUNNING_REQUESTED'
+  | 'DUNNING_RECEIVED'
+  | 'AWAITING_RISK_ANALYSIS';
+
 export interface ICustomer {
   id: string;
   dateCreated: string;
@@ -6,4 +23,14 @@ export interface ICustomer {
   cpfCnpj: string;
   postalCode: string;
   addressNumber: string;
+}
+
+export interface IPayment {
+  id: string;
+  dateCreated: string;
+  customer: string;
+  value: string;
+  description?: string;
+  billingType: BillingType;
+  status: Status;
 }

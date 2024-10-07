@@ -4,6 +4,7 @@ import { catchError, lastValueFrom } from 'rxjs';
 import { CreatePaymentDto } from './dto/create-payment-dto';
 import { PaymentNotFound } from './error/payment-not-found';
 import { AxiosError } from 'axios';
+import { IPayment } from 'src/definitions';
 
 @Injectable()
 export class PaymentService {
@@ -17,7 +18,7 @@ export class PaymentService {
     },
   };
 
-  async payment(id: string) {
+  async payment(id: string): Promise<IPayment> {
     const response = await lastValueFrom(
       this.httpService.get(this.url + '/' + id, this.config).pipe(
         catchError((error: AxiosError) => {
@@ -31,7 +32,7 @@ export class PaymentService {
     return response.data;
   }
 
-  async payments() {
+  async payments(): Promise<IPayment[]> {
     const response = await lastValueFrom(
       this.httpService.get(this.url, this.config).pipe(
         catchError((error: AxiosError) => {
@@ -45,7 +46,7 @@ export class PaymentService {
     return response.data;
   }
 
-  async createPayment(createPaymentDto: CreatePaymentDto) {
+  async createPayment(createPaymentDto: CreatePaymentDto): Promise<IPayment> {
     const response = await lastValueFrom(
       this.httpService.post(this.url, createPaymentDto, this.config).pipe(
         catchError((error: AxiosError) => {
