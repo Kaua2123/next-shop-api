@@ -6,7 +6,7 @@ services:
     image: postgres:latest
     ports:
       - '5433:5432' # maquina:container
-    restart: always
+    restart: always # containers iniciados assim que o docker for aberto.
     environment: 
       - POSTGRES_USER=docker
       - POSTGRES_PASSWORD=docker

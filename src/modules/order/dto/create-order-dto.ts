@@ -5,4 +5,6 @@ export class CreateOrderDto {
     quantity: number;
     price: number;
   }[];
+  isInstallment?: boolean;
+  installmentCount?: number;
 }

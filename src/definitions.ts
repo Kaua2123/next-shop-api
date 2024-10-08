@@ -33,4 +33,6 @@ export interface IPayment {
   description?: string;
   billingType: BillingType;
   status: Status;
+  installmentCount?: number; // numero de parcelas.
+  installmentValue?: number;
 }

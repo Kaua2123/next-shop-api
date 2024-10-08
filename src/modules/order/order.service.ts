@@ -34,7 +34,7 @@ export class OrderService {
   }
 
   async createOrder(createOrderDto: CreateOrderDto) {
-    const { userId, items } = createOrderDto;
+    const { userId, items, installmentCount, isInstallment } = createOrderDto;
     // id tem q ser number
     // quantity tmb
     // items estão aqui no dto, por enquanto
@@ -47,6 +47,8 @@ export class OrderService {
           (acc, item) => acc + item.price * item.quantity,
           0,
         ),
+        isInstallment,
+        installmentCount,
         user: {
           connect: { id: userId },
         },
@@ -101,7 +103,9 @@ export class OrderService {
 
     const payment = await this.paymentService.createPayment({
       customer: customer.id,
-      value: order.total_price,
+      value: order.isInstallment ? null : order.total_price,
+      totalValue: order.isInstallment ? order.total_price : null,
+      installmentCount: order.isInstallment ? order.installmentCount : null,
       ...createPaymentDto,
     });
 
