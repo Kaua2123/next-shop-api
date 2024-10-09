@@ -33,6 +33,18 @@ export class OrderService {
     return order;
   }
 
+  async userOrders(userId: number) {
+    const orders = await this.prisma.order.findMany({
+      where: {
+        AND: { userId: Number(userId) },
+      },
+    });
+
+    if (!orders) throw new OrderNotFound();
+
+    return orders;
+  }
+
   async createOrder(createOrderDto: CreateOrderDto) {
     const { userId, items, installmentCount, isInstallment } = createOrderDto;
     // id tem q ser number

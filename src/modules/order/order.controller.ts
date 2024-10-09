@@ -17,6 +17,11 @@ export class OrderController {
     return await this.orderService.order({ id });
   }
 
+  @Get('/userOrder/:userId')
+  async getUserOrders(@Param('userId') userId: number) {
+    return await this.orderService.userOrders(userId);
+  }
+
   @Post('/create')
   async createOrder(@Body() createOrderDto: CreateOrderDto) {
     return await this.orderService.createOrder(createOrderDto);
