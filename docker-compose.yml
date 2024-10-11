@@ -1,5 +1,3 @@
-version: '3.7'
-
 # definindo containers 
 services:
   db: # nome do container

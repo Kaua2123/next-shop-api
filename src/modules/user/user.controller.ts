@@ -12,7 +12,7 @@ import { UserService } from './user.service';
 @Controller('/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-  // devido ao fato de userService ser Injectable, pode-se usar ele qui, como uma dependênica.
+  // devido ao fato de userService ser Injectable, pode-se usar ele aqui, no construtor da classe. como uma dependênica.
 
   @Get('/')
   async getUsers() {

@@ -1,45 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { UserNotFound } from './errors/user-not-found';
-import { PrismaService } from 'src/database/prisma.service';
-
-import * as bcrypt from 'bcrypt';
-import { MissingId } from 'src/errors/missing-id';
+import { UserRepository } from './repositories/user-repository';
 
 @Injectable() // para injeção de dependencia.
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   async users() {
-    const users = await this.prisma.user.findMany();
-    if (!users) throw new UserNotFound();
-
-    return users;
+    return await this.userRepository.users();
   }
 
   // Prisma gera tipagens especificas baseadas nos models criados.
   // Essa, por exemplo, permite que um usuario especifico seja encontrado
   // com base em seus campos unicos definidos no model. (como id e email)
   async user(userWhereUniqueInput: Prisma.UserWhereUniqueInput) {
-    const user = await this.prisma.user.findUnique({
-      where: userWhereUniqueInput,
-    });
-
-    if (!user) throw new UserNotFound();
-
-    return user;
+    return await this.userRepository.user(userWhereUniqueInput);
   }
 
   // Prisma.MOdelCrateInput
   // Semelhante á uma DTO, que seria os campos definidos, cada um com validação.
   // Prisma gera automaticamente essa tipagem com base nos models.
   async createUser(data: Prisma.UserCreateInput) {
-    const { name, email, password, cpfCnpj, cart, order, role } = data;
-    const hashPassword = await bcrypt.hash(password, 8);
-
-    return await this.prisma.user.create({
-      data: { name, email, password: hashPassword, cpfCnpj, cart, order, role },
-    });
+    return await this.userRepository.createUser(data);
   }
 
   //  aqui há uma combinaçao das duas tipagens do prisma.
@@ -49,23 +31,10 @@ export class UserService {
     userWhereUniqueInput: Prisma.UserWhereUniqueInput,
     data: Prisma.UserUpdateInput,
   ) {
-    if (!userWhereUniqueInput) throw new MissingId();
-
-    return await this.prisma.user.update({
-      data,
-      where: userWhereUniqueInput,
-    });
+    return await this.userRepository.updateUser(data, userWhereUniqueInput);
   }
 
   async deleteUser(userWhereUniqueInput: Prisma.UserWhereUniqueInput) {
-    if (!userWhereUniqueInput) throw new MissingId();
-
-    await this.prisma.user.delete({
-      where: userWhereUniqueInput,
-    });
-
-    return {
-      message: 'null',
-    };
+    return await this.userRepository.deleteUser(userWhereUniqueInput);
   }
 }
