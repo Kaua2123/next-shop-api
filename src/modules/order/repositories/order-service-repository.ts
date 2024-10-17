@@ -6,14 +6,14 @@ import { IPayment } from 'src/definitions';
 import { OrderNotFound } from '../errors/order-not-found';
 import { CreateOrderDto } from '../dto/create-order-dto';
 import { CreatePaymentDto } from 'src/modules/asaas-api/payment/dto/create-payment-dto';
-import { CustomerService } from 'src/modules/asaas-api/customers/customer.service';
 import { PaymentService } from 'src/modules/asaas-api/payment/payment.service';
+import { CustomerRepository } from 'src/modules/asaas-api/customers/repositories/customer-repository';
 
 @Injectable() // para torná-lo injetável
 export class OrderServiceRepository implements OrderRepository {
   constructor(
     private readonly prisma: PrismaService,
-    private readonly customerService: CustomerService,
+    private readonly customerRepository: CustomerRepository,
     private readonly paymentService: PaymentService,
   ) {}
 
@@ -100,14 +100,14 @@ export class OrderServiceRepository implements OrderRepository {
     if (!order) throw new OrderNotFound();
 
     const customerExists =
-      customerId && (await this.customerService.customer(customerId));
+      customerId && (await this.customerRepository.customer(customerId));
 
     const { user } = order;
 
     const customer =
       customerExists && customerId != null // se foi passado um id e o cliente existe
         ? customerExists
-        : await this.customerService.createCustomer({
+        : await this.customerRepository.createCustomer({
             // se não foi passado nenhum id, provavelmente o cliente nao existe.
             // porém, há casos em que o id simplesmente não foi recebido por algum motivo.
             // por isso, a condição verifica se existe, primeiro, um cliente.

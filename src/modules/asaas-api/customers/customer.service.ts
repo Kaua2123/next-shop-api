@@ -1,68 +1,23 @@
 import { Injectable } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
-import { catchError, lastValueFrom } from 'rxjs';
 import { CreateCustomerDto } from './dto/create-customer-dto';
 import { ICustomer } from 'src/definitions';
-import { CustomerNotFound } from './errors/customer-not-found';
-import { AxiosError } from 'axios';
+import { CustomerRepository } from './repositories/customer-repository';
 
 @Injectable()
 export class CustomerService {
-  constructor(private readonly httpService: HttpService) {}
-
-  private readonly baseUrl = 'https://sandbox.asaas.com/api/';
-  private readonly url = `${this.baseUrl}/v3/customers`;
-  private readonly config = {
-    headers: {
-      access_token: process.env.API_KEY,
-    },
-  };
-
-  async customer(id: string): Promise<ICustomer> {
-    const response = await lastValueFrom(
-      this.httpService.get(this.url + '/' + id, this.config).pipe(
-        catchError((error: AxiosError) => {
-          throw error.response.data;
-        }),
-      ),
-    );
-
-    // trocar por um error dps
-    if (!response.data) throw new CustomerNotFound();
-
-    return response.data;
-  }
+  constructor(private readonly customerRepository: CustomerRepository) {}
 
   async customers(): Promise<ICustomer[]> {
-    // nest js retorna um observable ao manipular o httpService (que usa o axios)
-    // por isso devemos torná-lo uma promise, com o lastValueFrom.
-    const response = await lastValueFrom(
-      this.httpService.get(this.url, this.config).pipe(
-        catchError((error: AxiosError) => {
-          throw error.response.data;
-        }),
-      ),
-    );
+    return await this.customerRepository.customers();
+  }
 
-    // trocar por um error dps
-    if (!response.data) throw new CustomerNotFound();
-
-    return response.data;
+  async customer(id: string): Promise<ICustomer> {
+    return await this.customerRepository.customer(id);
   }
 
   async createCustomer(
     createCustomerDto: CreateCustomerDto,
   ): Promise<ICustomer> {
-    console.log(createCustomerDto);
-
-    const response = await lastValueFrom(
-      this.httpService.post(this.url, createCustomerDto, this.config).pipe(
-        catchError((error: AxiosError) => {
-          throw error.response.data;
-        }),
-      ),
-    );
-
-    return response.data;
+    return await this.customerRepository.createCustomer(createCustomerDto);
   }
 }
