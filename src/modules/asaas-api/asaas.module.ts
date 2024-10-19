@@ -7,6 +7,7 @@ import { PaymentController } from './payment/payment.controller';
 import { PixController } from './pix/pix.controller';
 import { PixService } from './pix/pix.service';
 import { customerProviders } from './customers/customer.providers';
+import { paymentProviders } from './payment/payment.providers';
 
 @Module({
   imports: [HttpModule],
@@ -16,6 +17,7 @@ import { customerProviders } from './customers/customer.providers';
     PaymentService,
     PixService,
     ...customerProviders,
+    ...paymentProviders,
   ],
 })
 export class AsaasModule {}

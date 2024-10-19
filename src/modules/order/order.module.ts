@@ -5,8 +5,8 @@ import { OrderService } from './order.service';
 import { AsaasModule } from '../asaas-api/asaas.module';
 import { HttpModule } from '@nestjs/axios';
 import { orderProviders } from './order.providers';
-import { PaymentService } from '../asaas-api/payment/payment.service';
 import { customerProviders } from '../asaas-api/customers/customer.providers';
+import { paymentProviders } from '../asaas-api/payment/payment.providers';
 
 @Module({
   imports: [AsaasModule, HttpModule],
@@ -14,9 +14,9 @@ import { customerProviders } from '../asaas-api/customers/customer.providers';
   providers: [
     PrismaService,
     OrderService,
-    PaymentService,
     ...orderProviders,
     ...customerProviders,
+    ...paymentProviders,
   ],
 })
 export class OrderModule {}

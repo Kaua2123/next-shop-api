@@ -6,15 +6,15 @@ import { IPayment } from 'src/definitions';
 import { OrderNotFound } from '../errors/order-not-found';
 import { CreateOrderDto } from '../dto/create-order-dto';
 import { CreatePaymentDto } from 'src/modules/asaas-api/payment/dto/create-payment-dto';
-import { PaymentService } from 'src/modules/asaas-api/payment/payment.service';
 import { CustomerRepository } from 'src/modules/asaas-api/customers/repositories/customer-repository';
+import { PaymentRepository } from 'src/modules/asaas-api/payment/repositories/payment-repository';
 
 @Injectable() // para torná-lo injetável
 export class OrderServiceRepository implements OrderRepository {
   constructor(
     private readonly prisma: PrismaService,
     private readonly customerRepository: CustomerRepository,
-    private readonly paymentService: PaymentService,
+    private readonly paymentRepository: PaymentRepository,
   ) {}
 
   async orders(): Promise<Order[]> {
@@ -116,7 +116,7 @@ export class OrderServiceRepository implements OrderRepository {
             cpfCnpj: user.cpfCnpj,
           });
 
-    const payment = await this.paymentService.createPayment({
+    const payment = await this.paymentRepository.createPayment({
       customer: customer.id,
       value: order.isInstallment ? null : order.total_price,
       totalValue: order.isInstallment ? order.total_price : null,
