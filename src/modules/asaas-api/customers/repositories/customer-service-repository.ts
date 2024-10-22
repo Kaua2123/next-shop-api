@@ -22,13 +22,12 @@ export class CustomerServiceRepository {
     const response = await lastValueFrom(
       this.httpService.get(this.url + '/' + id, this.config).pipe(
         catchError((error: AxiosError) => {
-          throw error.response.data;
+          if (error.response.status == 404) throw new CustomerNotFound();
+
+          throw new Error('Request failed');
         }),
       ),
     );
-
-    // trocar por um error dps
-    if (!response.data) throw new CustomerNotFound();
 
     return response.data;
   }
@@ -39,13 +38,12 @@ export class CustomerServiceRepository {
     const response = await lastValueFrom(
       this.httpService.get(this.url, this.config).pipe(
         catchError((error: AxiosError) => {
-          throw error.response.data;
+          if (error.response.status == 404) throw new CustomerNotFound();
+
+          throw new Error('Request failed');
         }),
       ),
     );
-
-    // trocar por um error dps
-    if (!response.data) throw new CustomerNotFound();
 
     return response.data;
   }
