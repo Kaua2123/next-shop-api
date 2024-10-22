@@ -28,7 +28,7 @@ export class PixServiceRepository implements PixRepository {
     const response = await lastValueFrom(
       this.httpService.get(url, this.config).pipe(
         catchError((error: AxiosError) => {
-          console.error('Request failed', error);
+          console.error('Request failed');
           throw error.response.data;
         }),
       ),

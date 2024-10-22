@@ -41,12 +41,16 @@ export class ProductServiceRepository implements ProductRepository {
   ): Promise<Product> {
     if (!productWhereUniqueInput) throw new MissingId();
 
+    const productExists = await this.prisma.product.findFirst({
+      where: productWhereUniqueInput,
+    });
+
+    if (!productExists) throw new ProductNotFound();
+
     const product = await this.prisma.product.update({
       where: productWhereUniqueInput,
       data,
     });
-
-    if (!product) throw new ProductNotFound();
 
     return product;
   }
@@ -57,12 +61,16 @@ export class ProductServiceRepository implements ProductRepository {
   ): Promise<{ productId: string; isDisponible: boolean }> {
     if (!productWhereUniqueInput) throw new MissingId();
 
+    const productExists = await this.prisma.product.findFirst({
+      where: productWhereUniqueInput,
+    });
+
+    if (!productExists) throw new ProductNotFound();
+
     const product = await this.prisma.product.update({
       where: productWhereUniqueInput,
       data,
     });
-
-    if (!product) throw new ProductNotFound();
 
     return {
       productId: product.id,
@@ -76,12 +84,16 @@ export class ProductServiceRepository implements ProductRepository {
   ): Promise<{ productId: string; category: string }> {
     if (!productWhereUniqueInput) throw new MissingId();
 
+    const productExists = await this.prisma.product.findFirst({
+      where: productWhereUniqueInput,
+    });
+
+    if (!productExists) throw new ProductNotFound();
+
     const product = await this.prisma.product.update({
       where: productWhereUniqueInput,
       data,
     });
-
-    if (!product) throw new ProductNotFound();
 
     return {
       productId: product.id,
