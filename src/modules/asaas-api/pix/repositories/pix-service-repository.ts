@@ -28,13 +28,12 @@ export class PixServiceRepository implements PixRepository {
     const response = await lastValueFrom(
       this.httpService.get(url, this.config).pipe(
         catchError((error: AxiosError) => {
-          console.error('Request failed');
-          throw error.response.data;
+          if (error.response.status === 404) throw new QrCodeNotFound();
+
+          throw new Error('Request failed');
         }),
       ),
     );
-
-    if (!response.data) throw new QrCodeNotFound();
 
     return response.data;
   }
