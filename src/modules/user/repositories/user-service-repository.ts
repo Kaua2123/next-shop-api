@@ -6,6 +6,7 @@ import { MissingId } from 'src/errors/missing-id';
 import { UserNotFound } from '../errors/user-not-found';
 
 import bcrypt from 'bcrypt';
+import { MissingFields } from '../errors/missing-fields';
 
 @Injectable() // para torná-lo injetável, permitindo, assim, injeção de depeneencia
 export class UserServiceRepository implements UserRepository {
@@ -30,6 +31,8 @@ export class UserServiceRepository implements UserRepository {
 
   async createUser(data: Prisma.UserCreateInput): Promise<User> {
     const { name, email, password, cpfCnpj, cart, order, role } = data;
+    if (!name || !email || !password || !cpfCnpj) throw new MissingFields();
+
     const hashPassword = await bcrypt.hash(password, 8);
 
     return await this.prisma.user.create({
