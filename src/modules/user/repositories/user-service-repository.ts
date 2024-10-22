@@ -5,7 +5,7 @@ import { Prisma, User } from '@prisma/client';
 import { MissingId } from 'src/errors/missing-id';
 import { UserNotFound } from '../errors/user-not-found';
 
-import bcrypt from 'bcrypt';
+import * as bcrypt from 'bcrypt';
 import { MissingFields } from '../errors/missing-fields';
 
 @Injectable() // para torná-lo injetável, permitindo, assim, injeção de depeneencia
