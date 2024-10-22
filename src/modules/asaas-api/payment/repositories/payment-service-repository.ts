@@ -23,13 +23,12 @@ export class PaymentServiceRepository implements PaymentRepository {
     const response = await lastValueFrom(
       this.httpService.get(this.url, this.config).pipe(
         catchError((error: AxiosError) => {
-          console.error('Request failed');
-          throw error.response.data;
+          if (error.response.status == 404) throw new PaymentNotFound();
+
+          throw new Error('Request failed');
         }),
       ),
     );
-
-    if (!response.data) throw new PaymentNotFound();
 
     return response.data;
   }
@@ -38,13 +37,12 @@ export class PaymentServiceRepository implements PaymentRepository {
     const response = await lastValueFrom(
       this.httpService.get(this.url + '/' + id, this.config).pipe(
         catchError((error: AxiosError) => {
-          console.error('Request failed', error);
-          throw error.response.data;
+          if (error.response.status == 404) throw new PaymentNotFound();
+
+          throw new Error('Request failed');
         }),
       ),
     );
-
-    if (!response.data) throw new PaymentNotFound();
 
     return response.data;
   }
