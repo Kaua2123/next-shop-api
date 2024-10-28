@@ -20,7 +20,7 @@ export class UserServiceRepository implements UserRepository {
   }
 
   async user(userWhereUniqueInput: Prisma.UserWhereUniqueInput): Promise<User> {
-    const user = await this.prisma.user.findUnique({
+    const user = await this.prisma.user.findFirst({
       where: userWhereUniqueInput,
     });
 

@@ -25,6 +25,8 @@ export class AppModule implements NestModule {
         '/product/',
         '/product/:id',
         '/user/create',
+        '/user/',
+        '/user/:id',
         '/user/update/:id',
         '/user/delete/:id',
       )
