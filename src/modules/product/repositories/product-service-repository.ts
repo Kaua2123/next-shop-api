@@ -4,6 +4,7 @@ import { Prisma, Product } from '@prisma/client';
 import { ProductNotFound } from '../errors/product-not-found';
 import { MissingId } from 'src/errors/missing-id';
 import { Injectable } from '@nestjs/common';
+import { MissingFields } from 'src/errors/missing-fields';
 
 @Injectable()
 export class ProductServiceRepository implements ProductRepository {
@@ -30,6 +31,11 @@ export class ProductServiceRepository implements ProductRepository {
   }
 
   async createProduct(data: Prisma.ProductCreateInput): Promise<Product> {
+    const { name, description, price, stock, image_url, category } = data;
+
+    if (!name || !description || !price || !stock || !image_url || !category)
+      throw new MissingFields();
+
     return await this.prisma.product.create({
       data,
     });

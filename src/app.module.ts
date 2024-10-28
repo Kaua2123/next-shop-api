@@ -24,6 +24,7 @@ export class AppModule implements NestModule {
       .exclude(
         '/product/',
         '/product/:id',
+        '/user/create',
         '/user/update/:id',
         '/user/delete/:id',
       )

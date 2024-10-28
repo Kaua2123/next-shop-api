@@ -6,7 +6,7 @@ import { MissingId } from 'src/errors/missing-id';
 import { UserNotFound } from '../errors/user-not-found';
 
 import * as bcrypt from 'bcrypt';
-import { MissingFields } from '../errors/missing-fields';
+import { MissingFields } from 'src/errors/missing-fields';
 
 @Injectable() // para torná-lo injetável, permitindo, assim, injeção de depeneencia
 export class UserServiceRepository implements UserRepository {
