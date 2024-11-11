@@ -31,7 +31,7 @@ export class AuthService {
 
     const token = jwt.sign({ id }, process.env.SECRET);
 
-    if (user.role === 'ADMIN') return { token: token, role: 'ADM' };
+    if (user.role === 'ADMIN') return { token, role: 'ADM' };
 
     return { token, role: 'CLIENT' };
   }

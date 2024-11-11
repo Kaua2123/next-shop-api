@@ -11,9 +11,17 @@ import { CustomerController } from './modules/asaas-api/customers/customer.contr
 import { PaymentController } from './modules/asaas-api/payment/payment.controller';
 import { PixController } from './modules/asaas-api/pix/pix.controller';
 import { UserController } from './modules/user/user.controller';
+import { CartModule } from './modules/cart/cart.module';
 
 @Module({
-  imports: [UserModule, AuthModule, ProductModule, OrderModule, AsaasModule],
+  imports: [
+    UserModule,
+    AuthModule,
+    ProductModule,
+    OrderModule,
+    CartModule,
+    AsaasModule,
+  ],
   controllers: [],
   providers: [],
 })
