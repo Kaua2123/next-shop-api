@@ -36,3 +36,8 @@ export interface IPayment {
   installmentCount?: number; // numero de parcelas.
   installmentValue?: number;
 }
+
+export interface IToken {
+  id: number;
+  role: 'CLIENT' | 'ADMIN';
+}

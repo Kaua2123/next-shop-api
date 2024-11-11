@@ -12,6 +12,7 @@ import { PaymentController } from './modules/asaas-api/payment/payment.controlle
 import { PixController } from './modules/asaas-api/pix/pix.controller';
 import { UserController } from './modules/user/user.controller';
 import { CartModule } from './modules/cart/cart.module';
+import { IsAdmin } from './middlewares/is-admin';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { CartModule } from './modules/cart/cart.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(AuthRequired)
+      .apply(AuthRequired, IsAdmin)
       .exclude(
         '/product/',
         '/product/:id',

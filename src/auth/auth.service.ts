@@ -27,12 +27,12 @@ export class AuthService {
 
     if (!pass) throw new EmailOrPasswordDoNotMatch();
 
-    const { id } = user;
+    const { id, role } = user;
 
-    const token = jwt.sign({ id }, process.env.SECRET);
+    const token = jwt.sign({ id, role }, process.env.SECRET);
 
     if (user.role === 'ADMIN') return { token, role: 'ADM' };
 
-    return { token, role: 'CLIENT' };
+    return { token };
   }
 }
