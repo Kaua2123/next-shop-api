@@ -63,7 +63,7 @@ model Product {
   description  String
   price        Float
   stock        Int
-  image_url    String
+  image_url    String?
   sizes        Sizes?
   category     Category
   isDisponible Boolean      @default(true)
