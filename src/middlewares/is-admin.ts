@@ -11,6 +11,12 @@ import { IToken } from 'src/definitions';
 @Injectable()
 export class IsAdmin implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
+    if (!req.headers.authorization)
+      throw new HttpException(
+        'Você deve estar logado para realizar esta ação.',
+        HttpStatus.UNAUTHORIZED,
+      );
+
     const token = req.headers.authorization.split(' ')[1];
 
     const decodedToken: IToken = jwtDecode(token);
@@ -18,7 +24,7 @@ export class IsAdmin implements NestMiddleware {
     if (decodedToken.role !== 'ADMIN')
       throw new HttpException(
         'Você deve ser um ADM para realizar esta ação.',
-        HttpStatus.BAD_REQUEST,
+        HttpStatus.UNAUTHORIZED,
       );
 
     next();

@@ -29,10 +29,15 @@ import { IsAdmin } from './middlewares/is-admin';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(AuthRequired, IsAdmin)
+      .apply(AuthRequired)
       .exclude(
         '/product/',
         '/product/:id',
+        '/product/create',
+        '/product/update/:id',
+        '/product/updateProductDisponibility/:id',
+        '/product/updateProductCategory/:id',
+        '/product/delete/:id',
         '/user/create',
         '/user/',
         '/user/:id',
@@ -47,5 +52,14 @@ export class AppModule implements NestModule {
         PaymentController,
         PixController,
       );
+    consumer
+      .apply(IsAdmin)
+      .exclude(
+        '/product/',
+        '/product/:id',
+        '/asaas/create/customer',
+        '/asaas/create/payment',
+      )
+      .forRoutes(ProductController, CustomerController, PaymentController);
   }
 }

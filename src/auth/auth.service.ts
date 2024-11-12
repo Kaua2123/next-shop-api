@@ -33,6 +33,6 @@ export class AuthService {
 
     if (user.role === 'ADMIN') return { token, role: 'ADM' };
 
-    return { token };
+    return { token, role: 'CLIENT' };
   }
 }
