@@ -54,6 +54,7 @@ export class OrderServiceRepository implements OrderRepository {
     // id tem q ser number
     // quantity tmb
     // items estão aqui no dto, por enquanto
+    // agora os itens virão do cart, que criarei
     // são passados via POST.
     // porém, devem vir do carrinho de compras
 
