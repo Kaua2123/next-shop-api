@@ -12,6 +12,13 @@ export class CartService {
   async cart(cartWhereUniqueInput: Prisma.CartWhereUniqueInput) {
     const cart = await this.prisma.cart.findFirst({
       where: cartWhereUniqueInput,
+      include: {
+        cart_items: {
+          include: {
+            product: true,
+          },
+        },
+      },
     });
 
     if (!cart) throw new CartNotFound();
