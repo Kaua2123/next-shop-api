@@ -64,6 +64,12 @@ export class CartService {
   ) {
     const { items } = addItemsToCartDto;
 
+    const cartExists = await this.prisma.cart.findFirst({
+      where: cartWhereUniqueInput,
+    });
+
+    if (!cartExists) throw new CartNotFound();
+
     const cart = await this.prisma.cart.update({
       where: cartWhereUniqueInput,
       data: {
@@ -75,7 +81,7 @@ export class CartService {
               connect: { id: item.productId },
             },
           })),
-        }, // preciso checar se cart items ja tem algum registro antes de criar. mas posso tentar criar sem isso.
+        },
       },
     });
 
@@ -83,4 +89,6 @@ export class CartService {
 
     return cart;
   }
+
+  async removeItemsFromCart() {}
 }
