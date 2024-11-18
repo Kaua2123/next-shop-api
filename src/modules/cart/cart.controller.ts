@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart-dto';
 import { AddItemsToCartDto } from './dto/add-items-to-cart-dto';
@@ -23,5 +31,13 @@ export class CartController {
     @Body() addItemsToCartDto: AddItemsToCartDto,
   ) {
     return await this.cartService.addItemsToCart({ id }, addItemsToCartDto);
+  }
+
+  @Delete('/removeItemsFromCart/:id/:productId')
+  async removeItemsFromCart(
+    @Param('id') id: string,
+    @Param('productId') productId: string,
+  ) {
+    return await this.cartService.removeItemsFromCart(id, productId);
   }
 }

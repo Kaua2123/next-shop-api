@@ -27,11 +27,6 @@ export class CartService {
   }
 
   async createCartWithItems(createCartDto: CreateCartDto) {
-    // posso permtir que crie o carrinho na hora que o usuario querer adicionar algum item ao carrinho.
-    // tipo, "adicionar ao carrinho", e nesse momento ele cria o carrinho, com esse item.
-    // caso ele tente acessar o carrinho sem adicionar nada ao carrinho, apareceria "nada por aqui. adicione algo ao carrinho"
-    // ou coisa assim.
-
     const { id, created_at, user_id, items } = createCartDto;
 
     const cart = await this.prisma.cart.create({
@@ -58,7 +53,6 @@ export class CartService {
   }
 
   async addItemsToCart(
-    // e aqui seria a rota de adicionar MAIS itens ao carrinho.
     cartWhereUniqueInput: Prisma.CartWhereUniqueInput,
     addItemsToCartDto: AddItemsToCartDto,
   ) {
@@ -90,5 +84,32 @@ export class CartService {
     return cart;
   }
 
-  async removeItemsFromCart() {}
+  async removeItemsFromCart(cartId: string, productIdToDelete: string) {
+    const cart = await this.prisma.cart.findFirst({
+      where: { id: cartId },
+      include: {
+        cart_items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    });
+
+    if (!cart) throw new CartNotFound();
+
+    const product = await this.prisma.product.findFirst({
+      where: { id: productIdToDelete },
+    });
+
+    await this.prisma.cartItems.deleteMany({
+      // deletando com base no id do carrinho e do produto em um registro de cart items
+      where: {
+        cartId,
+        productId: productIdToDelete,
+      },
+    });
+
+    return { deletedProduct: product };
+  }
 }
