@@ -4,6 +4,7 @@ import { PrismaService } from 'src/database/prisma.service';
 import { CartNotFound } from './errors/cart-not-found';
 import { CreateCartDto } from './dto/create-cart-dto';
 import { AddItemsToCartDto } from './dto/add-items-to-cart-dto';
+import { ProductNotFound } from '../product/errors/product-not-found';
 
 @Injectable()
 export class CartService {
@@ -84,7 +85,7 @@ export class CartService {
     return cart;
   }
 
-  async removeItemsFromCart(cartId: string, productIdToDelete: string) {
+  async removeItemsFromCart(cartId: string, productIdToRemove: string) {
     const cart = await this.prisma.cart.findFirst({
       where: { id: cartId },
       include: {
@@ -98,18 +99,22 @@ export class CartService {
 
     if (!cart) throw new CartNotFound();
 
-    const product = await this.prisma.product.findFirst({
-      where: { id: productIdToDelete },
+    const productInCart = await this.prisma.cartItems.findFirst({
+      where: {
+        productId: productIdToRemove,
+      },
     });
+
+    if (!productInCart) throw new ProductNotFound();
 
     await this.prisma.cartItems.deleteMany({
       // deletando com base no id do carrinho e do produto em um registro de cart items
       where: {
         cartId,
-        productId: productIdToDelete,
+        productId: productIdToRemove,
       },
     });
 
-    return { deletedProduct: product };
+    return { removedProduct: productInCart };
   }
 }
