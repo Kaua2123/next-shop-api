@@ -53,36 +53,82 @@ export class CartService {
     return cart;
   }
 
+  //aumentar a quantidade do produto ao adicionar ele no carrinho novamnete.
   async addItemsToCart(
     cartWhereUniqueInput: Prisma.CartWhereUniqueInput,
     addItemsToCartDto: AddItemsToCartDto,
   ) {
     const { items } = addItemsToCartDto;
+    const returnedCart = [];
 
     const cartExists = await this.prisma.cart.findFirst({
       where: cartWhereUniqueInput,
-    });
-
-    if (!cartExists) throw new CartNotFound();
-
-    const cart = await this.prisma.cart.update({
-      where: cartWhereUniqueInput,
-      data: {
+      include: {
         cart_items: {
-          create: items.map((item) => ({
-            quantity: item.quantity,
-            price: item.price,
-            product: {
-              connect: { id: item.productId },
-            },
-          })),
+          include: {
+            product: true,
+          },
         },
       },
     });
 
-    if (!cart) throw new CartNotFound();
+    if (!cartExists) throw new CartNotFound();
 
-    return cart;
+    items.map(async (item) => {
+      const productsInCart = await this.prisma.cartItems.findMany({
+        where: {
+          cartId: cartWhereUniqueInput.id,
+          productId: item.productId,
+        },
+      });
+
+      if (productsInCart.length > 0) {
+        const cart = await this.prisma.cart.update({
+          where: cartWhereUniqueInput,
+          data: {
+            cart_items: {
+              updateMany: {
+                where: {
+                  cartId: cartWhereUniqueInput.id,
+                  productId: item.productId,
+                },
+                data: {
+                  quantity: {
+                    increment: 1, // incrementa o valor de quantidade em 1. (quantity = quantity + 1)
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        if (!cart) throw new CartNotFound();
+
+        returnedCart.push(cart);
+      } else {
+        const cart = await this.prisma.cart.update({
+          where: cartWhereUniqueInput,
+          data: {
+            cart_items: {
+              create: items.map((item) => ({
+                quantity: item.quantity,
+                price: item.price,
+                product: {
+                  connect: { id: item.productId },
+                },
+              })),
+            },
+          },
+        });
+
+        if (!cart) throw new CartNotFound();
+        returnedCart.push(cart);
+      }
+    });
+
+    return {
+      message: 'product added',
+    };
   }
 
   async removeItemsFromCart(cartId: string, productIdToRemove: string) {
