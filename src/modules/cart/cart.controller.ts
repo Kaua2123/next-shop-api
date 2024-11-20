@@ -4,12 +4,14 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Put,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { CreateCartDto } from './dto/create-cart-dto';
 import { AddItemsToCartDto } from './dto/add-items-to-cart-dto';
+import { UpdateItemQuantityDto } from './dto/update-item-quantity-dto';
 
 @Controller('/cart')
 export class CartController {
@@ -33,11 +35,24 @@ export class CartController {
     return await this.cartService.addItemsToCart({ id }, addItemsToCartDto);
   }
 
-  @Delete('/removeItemsFromCart/:id/:productId')
-  async removeItemsFromCart(
+  @Delete('/removeItemFromCart/:id/:productId')
+  async removeItemFromCart(
     @Param('id') id: string,
     @Param('productId') productId: string,
   ) {
-    return await this.cartService.removeItemsFromCart(id, productId);
+    return await this.cartService.removeItemFromCart(id, productId);
+  }
+
+  @Patch('/updateQuantity/:id/:productId')
+  async updateItemQuantity(
+    @Param('id') id: string,
+    @Param('productId') productId: string,
+    @Body() updateItemQuantityDto: UpdateItemQuantityDto,
+  ) {
+    return await this.cartService.updateItemQuantity(
+      { id },
+      productId,
+      updateItemQuantityDto,
+    );
   }
 }

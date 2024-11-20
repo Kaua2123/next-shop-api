@@ -5,6 +5,7 @@ import { CartNotFound } from './errors/cart-not-found';
 import { CreateCartDto } from './dto/create-cart-dto';
 import { AddItemsToCartDto } from './dto/add-items-to-cart-dto';
 import { ProductNotFound } from '../product/errors/product-not-found';
+import { UpdateItemQuantityDto } from './dto/update-item-quantity-dto';
 
 @Injectable()
 export class CartService {
@@ -53,13 +54,11 @@ export class CartService {
     return cart;
   }
 
-  //aumentar a quantidade do produto ao adicionar ele no carrinho novamnete.
   async addItemsToCart(
     cartWhereUniqueInput: Prisma.CartWhereUniqueInput,
     addItemsToCartDto: AddItemsToCartDto,
   ) {
     const { items } = addItemsToCartDto;
-    const returnedCart = [];
 
     const cartExists = await this.prisma.cart.findFirst({
       where: cartWhereUniqueInput,
@@ -103,8 +102,6 @@ export class CartService {
         });
 
         if (!cart) throw new CartNotFound();
-
-        returnedCart.push(cart);
       } else {
         const cart = await this.prisma.cart.update({
           where: cartWhereUniqueInput,
@@ -122,7 +119,6 @@ export class CartService {
         });
 
         if (!cart) throw new CartNotFound();
-        returnedCart.push(cart);
       }
     });
 
@@ -131,7 +127,8 @@ export class CartService {
     };
   }
 
-  async removeItemsFromCart(cartId: string, productIdToRemove: string) {
+  // remove o produto do carrinho, independente de sua quantidade.
+  async removeItemFromCart(cartId: string, productIdToRemove: string) {
     const cart = await this.prisma.cart.findFirst({
       where: { id: cartId },
       include: {
@@ -162,5 +159,29 @@ export class CartService {
     });
 
     return { removedProduct: productInCart };
+  }
+
+  async updateItemQuantity(
+    cartWhereUniqueInput: Prisma.CartWhereUniqueInput,
+    productId: string,
+    updateItemQuantityDto: UpdateItemQuantityDto,
+  ) {
+    const { quantity } = updateItemQuantityDto;
+
+    const cartExists = await this.prisma.cart.findFirst({
+      where: cartWhereUniqueInput,
+    });
+
+    if (!cartExists) throw new CartNotFound();
+
+    await this.prisma.cartItems.updateMany({
+      where: {
+        cartId: cartWhereUniqueInput.id,
+        productId,
+      },
+      data: {
+        quantity, // passando a nova quantidade fornecida.
+      },
+    });
   }
 }
