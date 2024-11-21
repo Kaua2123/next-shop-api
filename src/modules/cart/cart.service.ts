@@ -81,6 +81,8 @@ export class CartService {
         },
       });
 
+      if (!productsInCart) throw new ProductNotFound();
+
       if (productsInCart.length > 0) {
         const cart = await this.prisma.cart.update({
           where: cartWhereUniqueInput,
@@ -171,8 +173,12 @@ export class CartService {
     const cartExists = await this.prisma.cart.findFirst({
       where: cartWhereUniqueInput,
     });
+    const productExists = await this.prisma.product.findFirst({
+      where: { id: productId },
+    });
 
     if (!cartExists) throw new CartNotFound();
+    if (!productExists) throw new ProductNotFound();
 
     await this.prisma.cartItems.updateMany({
       where: {
@@ -183,5 +189,9 @@ export class CartService {
         quantity, // passando a nova quantidade fornecida.
       },
     });
+
+    return {
+      message: 'quantity updated',
+    };
   }
 }
