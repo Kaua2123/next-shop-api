@@ -93,7 +93,7 @@ export class CartService {
                 },
                 data: {
                   quantity: {
-                    increment: 1, // incrementa o valor de quantidade em 1. (quantity = quantity + 1)
+                    increment: item.quantity, // agora, incrementando a quantidade passada.
                   },
                 },
               },
