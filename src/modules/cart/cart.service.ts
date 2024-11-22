@@ -42,9 +42,8 @@ export class CartService {
         cart_items: {
           create: items.map((item) => ({
             quantity: item.quantity,
-            price: item.price,
             product: {
-              connect: { id: item.productId },
+              connect: { id: item.productId, price: item.price },
             },
           })),
         },
@@ -111,9 +110,8 @@ export class CartService {
             cart_items: {
               create: items.map((item) => ({
                 quantity: item.quantity,
-                price: item.price,
                 product: {
-                  connect: { id: item.productId },
+                  connect: { id: item.productId, price: item.price },
                 },
               })),
             },
