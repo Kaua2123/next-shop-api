@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "carts" ALTER COLUMN "subtotal" SET DATA TYPE DOUBLE PRECISION;

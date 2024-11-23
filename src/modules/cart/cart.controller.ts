@@ -55,4 +55,9 @@ export class CartController {
       updateItemQuantityDto,
     );
   }
+
+  @Delete('/delete/:id')
+  async deleteCart(@Param('id') id: string) {
+    return await this.cartService.deleteCart({ id });
+  }
 }

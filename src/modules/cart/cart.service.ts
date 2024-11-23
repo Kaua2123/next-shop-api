@@ -35,6 +35,10 @@ export class CartService {
       data: {
         id,
         created_at,
+        subtotal: items.reduce(
+          (acc, item) => item.price * item.quantity + acc,
+          0,
+        ),
         user: {
           // ligação com a tabela user
           connect: { id: user_id },
@@ -98,6 +102,9 @@ export class CartService {
                   },
                 },
               },
+            },
+            subtotal: {
+              increment: item.price,
             },
           },
         });
@@ -190,6 +197,16 @@ export class CartService {
 
     return {
       message: 'quantity updated',
+    };
+  }
+
+  // rota de desenvolvimento
+  async deleteCart(cartWhereUniqueInput: Prisma.CartWhereUniqueInput) {
+    const cart = await this.prisma.cart.delete({ where: cartWhereUniqueInput });
+
+    return {
+      message: 'deleted',
+      cart,
     };
   }
 }
