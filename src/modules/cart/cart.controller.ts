@@ -17,6 +17,11 @@ import { UpdateItemQuantityDto } from './dto/update-item-quantity-dto';
 export class CartController {
   constructor(private cartService: CartService) {}
 
+  @Get('/')
+  async getCarts() {
+    return await this.cartService.carts();
+  }
+
   @Get('/:id')
   async findCartById(@Param('id') id: string) {
     return await this.cartService.cart({ id });

@@ -77,7 +77,7 @@ model Product {
 
 model Cart {
   id         String      @id @default(uuid())
-  subtotal   Float
+  subtotal   Float?
   created_at DateTime    @default(now())
   user       User        @relation(fields: [userId], references: [id])
   userId     Int         @unique
@@ -114,6 +114,7 @@ model Promotion {
 
 model CartItems {
   id         String   @id @default(uuid())
+  price      Float
   quantity   Int
   cart       Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product    Product  @relation(fields: [productId], references: [id])

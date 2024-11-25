@@ -11,6 +11,14 @@ import { UpdateItemQuantityDto } from './dto/update-item-quantity-dto';
 export class CartService {
   constructor(private prisma: PrismaService) {}
 
+  async carts() {
+    const carts = await this.prisma.cart.findMany();
+
+    if (!carts) throw new CartNotFound();
+
+    return carts;
+  }
+
   async cart(cartWhereUniqueInput: Prisma.CartWhereUniqueInput) {
     const cart = await this.prisma.cart.findFirst({
       where: cartWhereUniqueInput,
@@ -46,8 +54,9 @@ export class CartService {
         cart_items: {
           create: items.map((item) => ({
             quantity: item.quantity,
+            price: item.price,
             product: {
-              connect: { id: item.productId, price: item.price },
+              connect: { id: item.productId },
             },
           })),
         },
@@ -117,8 +126,9 @@ export class CartService {
             cart_items: {
               create: items.map((item) => ({
                 quantity: item.quantity,
+                price: item.price,
                 product: {
-                  connect: { id: item.productId, price: item.price },
+                  connect: { id: item.productId },
                 },
               })),
             },
