@@ -13,6 +13,7 @@ export abstract class OrderRepository {
   abstract userOrders(userId: number): Promise<Order[]>;
 
   abstract createOrder(
+    cartWhereUniqueInput: Prisma.CartWhereUniqueInput,
     createOrderDto: CreateOrderDto,
   ): Promise<{ order: Order }>;
 

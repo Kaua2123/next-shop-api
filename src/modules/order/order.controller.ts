@@ -22,9 +22,12 @@ export class OrderController {
     return await this.orderService.userOrders(userId);
   }
 
-  @Post('/create')
-  async createOrder(@Body() createOrderDto: CreateOrderDto) {
-    return await this.orderService.createOrder(createOrderDto);
+  @Post('/create/:cartId')
+  async createOrder(
+    @Param('cartId') id: string,
+    @Body() createOrderDto: CreateOrderDto,
+  ) {
+    return await this.orderService.createOrder({ id }, createOrderDto);
   }
 
   @Post('/checkout/:id/:customerId?') // interrogaçao pra indicar q o parametro é opcional.

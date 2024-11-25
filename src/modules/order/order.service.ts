@@ -20,8 +20,14 @@ export class OrderService {
     await this.orderRepository.userOrders(userId);
   }
 
-  async createOrder(createOrderDto: CreateOrderDto) {
-    await this.orderRepository.createOrder(createOrderDto);
+  async createOrder(
+    cartWhereUniqueInput: Prisma.CartWhereUniqueInput,
+    createOrderDto: CreateOrderDto,
+  ) {
+    await this.orderRepository.createOrder(
+      cartWhereUniqueInput,
+      createOrderDto,
+    );
   }
 
   // usando a api do ASAAS (integraçao com pagamentos)

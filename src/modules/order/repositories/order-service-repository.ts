@@ -49,14 +49,17 @@ export class OrderServiceRepository implements OrderRepository {
     return orders;
   }
 
-  async createOrder(createOrderDto: CreateOrderDto): Promise<{ order: Order }> {
-    const { userId, items, installmentCount, isInstallment } = createOrderDto;
-    // id tem q ser number
-    // quantity tmb
-    // items estão aqui no dto, por enquanto
-    // agora os itens virão do cart, que criarei
-    // são passados via POST.
-    // porém, devem vir do carrinho de compras
+  async createOrder(
+    cartWhereUniqueInput: Prisma.CartWhereUniqueInput,
+    createOrderDto: CreateOrderDto,
+  ): Promise<{ order: Order }> {
+    const { userId, installmentCount, isInstallment } = createOrderDto;
+
+    const items = await this.prisma.cartItems.findMany({
+      where: {
+        cartId: cartWhereUniqueInput.id,
+      },
+    });
 
     const order = await this.prisma.order.create({
       data: {
