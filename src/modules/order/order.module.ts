@@ -7,6 +7,7 @@ import { HttpModule } from '@nestjs/axios';
 import { orderProviders } from './order.providers';
 import { customerProviders } from '../asaas-api/customers/customer.providers';
 import { paymentProviders } from '../asaas-api/payment/payment.providers';
+import { CartService } from '../cart/cart.service';
 
 @Module({
   imports: [AsaasModule, HttpModule],
@@ -14,6 +15,7 @@ import { paymentProviders } from '../asaas-api/payment/payment.providers';
   providers: [
     PrismaService,
     OrderService,
+    CartService,
     ...orderProviders,
     ...customerProviders,
     ...paymentProviders,

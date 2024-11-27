@@ -9,22 +9,22 @@ export class OrderService {
   constructor(private readonly orderRepository: OrderRepository) {}
 
   async orders() {
-    await this.orderRepository.orders();
+    return await this.orderRepository.orders();
   }
 
   async order(orderWhereUniqueInput: Prisma.OrderWhereUniqueInput) {
-    await this.orderRepository.order(orderWhereUniqueInput);
+    return await this.orderRepository.order(orderWhereUniqueInput);
   }
 
   async userOrders(userId: number) {
-    await this.orderRepository.userOrders(userId);
+    return await this.orderRepository.userOrders(userId);
   }
 
   async createOrder(
     cartWhereUniqueInput: Prisma.CartWhereUniqueInput,
     createOrderDto: CreateOrderDto,
   ) {
-    await this.orderRepository.createOrder(
+    return await this.orderRepository.createOrder(
       cartWhereUniqueInput,
       createOrderDto,
     );
@@ -36,7 +36,7 @@ export class OrderService {
     createPaymentDto: CreatePaymentDto,
     customerId?: string,
   ) {
-    await this.orderRepository.checkout(
+    return await this.orderRepository.checkout(
       orderWhereUniqueInput,
       createPaymentDto,
       customerId,

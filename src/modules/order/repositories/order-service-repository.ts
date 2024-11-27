@@ -8,6 +8,7 @@ import { CreateOrderDto } from '../dto/create-order-dto';
 import { CreatePaymentDto } from 'src/modules/asaas-api/payment/dto/create-payment-dto';
 import { CustomerRepository } from 'src/modules/asaas-api/customers/repositories/customer-repository';
 import { PaymentRepository } from 'src/modules/asaas-api/payment/repositories/payment-repository';
+import { CartService } from 'src/modules/cart/cart.service';
 
 @Injectable() // para torná-lo injetável
 export class OrderServiceRepository implements OrderRepository {
@@ -15,6 +16,7 @@ export class OrderServiceRepository implements OrderRepository {
     private readonly prisma: PrismaService,
     private readonly customerRepository: CustomerRepository,
     private readonly paymentRepository: PaymentRepository,
+    private readonly cartService: CartService, // mudar pra repository dps
   ) {}
 
   async orders(): Promise<Order[]> {
@@ -55,15 +57,12 @@ export class OrderServiceRepository implements OrderRepository {
   ): Promise<{ order: Order }> {
     const { userId, installmentCount, isInstallment } = createOrderDto;
 
-    const items = await this.prisma.cartItems.findMany({
-      where: {
-        cartId: cartWhereUniqueInput.id,
-      },
-    });
+    const cart = await this.cartService.cart(cartWhereUniqueInput);
+    const { cart_items } = cart;
 
     const order = await this.prisma.order.create({
       data: {
-        total_price: items.reduce(
+        total_price: cart_items.reduce(
           (acc, item) => acc + item.price * item.quantity,
           0,
         ),
@@ -73,7 +72,7 @@ export class OrderServiceRepository implements OrderRepository {
           connect: { id: userId },
         },
         order_items: {
-          create: items.map((item) => ({
+          create: cart_items.map((item) => ({
             quantity: item.quantity,
             price: item.price,
             product: {
