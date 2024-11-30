@@ -8,6 +8,7 @@ import { orderProviders } from './order.providers';
 import { customerProviders } from '../asaas-api/customers/customer.providers';
 import { paymentProviders } from '../asaas-api/payment/payment.providers';
 import { CartService } from '../cart/cart.service';
+import { cartProviders } from '../cart/cart.providers';
 
 @Module({
   imports: [AsaasModule, HttpModule],
@@ -19,6 +20,7 @@ import { CartService } from '../cart/cart.service';
     ...orderProviders,
     ...customerProviders,
     ...paymentProviders,
+    ...cartProviders,
   ],
 })
 export class OrderModule {}

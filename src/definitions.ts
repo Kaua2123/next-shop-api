@@ -41,3 +41,12 @@ export interface IToken {
   id: number;
   role: 'CLIENT' | 'ADMIN';
 }
+
+export interface ProductInCart {
+  id: string;
+  created_at: Date;
+  price: number;
+  quantity: number;
+  productId: string;
+  cartId: string;
+}
