@@ -13,6 +13,7 @@ import { PixController } from './modules/asaas-api/pix/pix.controller';
 import { UserController } from './modules/user/user.controller';
 import { CartModule } from './modules/cart/cart.module';
 import { IsAdmin } from './middlewares/is-admin';
+import { PromotionModule } from './modules/promotion/promotion.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { IsAdmin } from './middlewares/is-admin';
     OrderModule,
     CartModule,
     AsaasModule,
+    PromotionModule,
   ],
   controllers: [],
   providers: [],
