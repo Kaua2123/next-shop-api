@@ -103,6 +103,7 @@ model Order {
 
 model Promotion {
   id         String   @id @default(uuid())
+  name       String   @unique
   discount   Decimal
   start_date DateTime
   end_date   DateTime
