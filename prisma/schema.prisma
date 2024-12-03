@@ -70,7 +70,8 @@ model Product {
   created_at   DateTime     @default(now())
   cart_items   CartItems[]
   order_items  OrderItems[]
-  Promotion    Promotion[]
+  Promotion    Promotion?   @relation(fields: [promotionId], references: [id])
+  promotionId  String?
 
   @@map("products")
 }
@@ -102,13 +103,12 @@ model Order {
 }
 
 model Promotion {
-  id         String   @id @default(uuid())
-  name       String   @unique
+  id         String    @id @default(uuid())
+  name       String    @unique
   discount   Decimal
   start_date DateTime
   end_date   DateTime
-  product    Product  @relation(fields: [productId], references: [id])
-  productId  String
+  products   Product[]
 
   @@map("promotions")
 }
