@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/database/prisma.service';
 import { PromotionsNotFound } from './errors/promotions-not-found';
 import { Prisma } from '@prisma/client';
-import { CreatePromotionDto } from './dto/create-promotion-dto';
 
 @Injectable()
 export class PromotionService {
@@ -27,22 +26,9 @@ export class PromotionService {
   }
 
   // rota de adm
-  async createPromotion(
-    productId: string,
-    createPromotionDto: CreatePromotionDto,
-  ) {
-    const { name, discount, start_date, end_date } = createPromotionDto;
-
+  async createPromotion(data: Prisma.PromotionCreateInput) {
     return await this.prisma.promotion.create({
-      data: {
-        name,
-        discount,
-        start_date,
-        end_date,
-        product: {
-          connect: { id: productId },
-        },
-      },
+      data,
     });
   }
 }

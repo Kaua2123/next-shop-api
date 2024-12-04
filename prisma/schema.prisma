@@ -106,9 +106,9 @@ model Promotion {
   id         String    @id @default(uuid())
   name       String    @unique
   discount   Decimal
-  start_date DateTime
-  end_date   DateTime
-  products   Product[]
+  start_date String // pus como string pra simplificar. 
+  end_date   String
+  product    Product[]
 
   @@map("promotions")
 }

@@ -1,6 +1,5 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PromotionService } from './promotion.service';
-import { CreatePromotionDto } from './dto/create-promotion-dto';
 
 @Controller('/promotion')
 export class PromotionController {
@@ -18,12 +17,14 @@ export class PromotionController {
 
   @Post('/createPromotion')
   async createPromotion(
-    @Param('productId') productId: string,
-    createPromotionDto: CreatePromotionDto,
+    @Body()
+    promotionData: {
+      name: string;
+      discount: number;
+      start_date: string;
+      end_date: string;
+    },
   ) {
-    return await this.promotionService.createPromotion(
-      productId,
-      createPromotionDto,
-    );
+    return await this.promotionService.createPromotion(promotionData);
   }
 }
